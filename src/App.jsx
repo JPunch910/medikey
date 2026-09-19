@@ -1,10 +1,60 @@
 import { useState } from "react";
+import { saveKeyPair, unlockPrivateKey } from "./cryptoStorage";
 import { readPdf, readTextFile } from "./utils/pdfReader";
 import { detectPII, redactPII } from "./utils/piiDetector";
 import { encryptText } from "./utils/encryption";
 import "./App.css";
 
 function App() {
+
+    const [showAuth, setShowAuth] = useState(true);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [authMessage, setAuthMessage] = useState("");
+
+  async function createSecureVault() {
+    try {
+      if (!email || !password) {
+        setAuthMessage("Please enter email and password.");
+        return;
+      }
+
+      const keyPair = await window.crypto.subtle.generateKey(
+        {
+          name: "ECDSA",
+          namedCurve: "P-256"
+        },
+        true,
+        ["sign", "verify"]
+      );
+
+      await saveKeyPair(keyPair, password);
+
+      console.log(
+        "PUBLIC KEY TO SEND TO BACKEND:",
+        await window.crypto.subtle.exportKey("jwk", keyPair.publicKey)
+      );
+
+      setAuthMessage("✅ Secure vault created!");
+      setShowAuth(false);
+    } catch (error) {
+      console.error(error);
+      setAuthMessage("❌ Could not create secure vault.");
+    }
+  }
+
+  async function login() {
+    try {
+      await unlockPrivateKey(password);
+      setAuthMessage("✅ Authentication successful!");
+      setShowAuth(false);
+    } catch (error) {
+      console.error(error);
+      setAuthMessage("❌ Wrong password or no saved account.");
+    }
+  }
+
+
   const [documents, setDocuments] = useState([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [selectedDocument, setSelectedDocument] = useState(null);
@@ -63,6 +113,53 @@ function App() {
 
     // Allows the same file to be selected again
     event.target.value = "";
+  }
+
+    if (showAuth) {
+    return (
+      <div className="app">
+        <main className="main" style={{ padding: "60px" }}>
+          <h1>MediKey</h1>
+          <h2>🔐 Secure Medical Vault</h2>
+          <p>Create or unlock your cryptographic identity.</p>
+
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+          />
+
+          <br /><br />
+
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+          />
+
+          <br /><br />
+
+          <button
+            className="primary-button"
+            onClick={createSecureVault}
+          >
+            Create Secure Vault
+          </button>
+
+          <button
+            className="primary-button"
+            onClick={login}
+            style={{ marginLeft: "10px" }}
+          >
+            Login
+          </button>
+
+          <p>{authMessage}</p>
+        </main>
+      </div>
+    );
   }
 
   return (
