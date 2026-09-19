@@ -7,6 +7,7 @@ import "./App.css";
 function App() {
   const [documents, setDocuments] = useState([]);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [selectedDocument, setSelectedDocument] = useState(null);
 
   async function handleFileChange(event) {
     const selectedFile = event.target.files[0];
@@ -361,20 +362,45 @@ function App() {
                     </p>
 
                     <button
-                      className="view-button"
-                      onClick={() => {
-                        alert(document.sanitizedText);
-                      }}
-                    >
-                      View Record
-                    </button>
+  className="view-button"
+  onClick={() => {
+    setSelectedDocument(document);
+  }}
+>
+  View Record
+</button>
 
                   </div>
 
                 ))}
 
-              </div>
-            )}
+              </div>)}
+              {selectedDocument && (
+  <div className="document-preview">
+    <div className="preview-header">
+      <div>
+        <h2>{selectedDocument.name}</h2>
+        <p>Extracted & sanitized document text</p>
+      </div>
+
+      <button
+        className="close-preview"
+        onClick={() => setSelectedDocument(null)}
+      >
+        ✕ Close
+      </button>
+    </div>
+
+    <div className="preview-security">
+      🔒 PII sanitized • Encrypted
+    </div>
+
+    <pre className="document-text">
+      {selectedDocument.sanitizedText}
+    </pre>
+  </div>
+)}
+            
 
           </section>
 

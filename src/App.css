@@ -480,4 +480,67 @@
   .hero h2 {
     font-size: 25px;
   }
+}.document-preview {
+  margin-top: 25px;
+  padding: 25px;
+  background: #f8fbff;
+  border: 1px solid #bfdbfe;
+  border-radius: 18px;
+}
+
+.preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 15px;
+}
+
+.preview-header h2 {
+  margin: 0;
+  color: #123564;
+}
+
+.preview-header p {
+  margin: 6px 0 0;
+  color: #71839d;
+  font-size: 13px;
+}
+
+.close-preview {
+  border: 1px solid #cbd5e1;
+  background: white;
+  color: #475569;
+  padding: 8px 14px;
+  border-radius: 9px;
+  font-weight: 600;
+}
+
+.close-preview:hover {
+  background: #f1f5f9;
+}
+
+.preview-security {
+  display: inline-block;
+  padding: 8px 12px;
+  margin-bottom: 18px;
+  border-radius: 20px;
+  background: #dff8ed;
+  color: #087a50;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.document-text {
+  margin: 0;
+  padding: 20px;
+  background: white;
+  border: 1px solid #e1eaf5;
+  border-radius: 14px;
+  color: #26384f;
+  font-family: "Courier New", monospace;
+  font-size: 13px;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  overflow-x: auto;
 }

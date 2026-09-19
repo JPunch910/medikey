@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # MediKey 🔐🏥
 
 ### Zero-Trust Medical Record Aggregator
@@ -71,3 +72,6 @@ medikey/
 ├── package.json
 ├── package-lock.json
 └── README.md
+=======
+# medikey
+>>>>>>> 2eb5da9503b25e4c161c38710a46fe7d950c7348
