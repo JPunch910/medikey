@@ -544,3 +544,188 @@
   white-space: pre-wrap;
   overflow-x: auto;
 }
+/* =========================
+   Provider Portal
+   Shared MediKey Design
+   ========================= */
+
+.provider-portal-wrapper {
+  margin-top: 25px;
+  background: #f4f8ff;
+  border: 1px solid #dce8f7;
+  border-radius: 22px;
+  padding: 25px;
+  box-shadow: 0 8px 30px rgba(31, 67, 115, 0.06);
+}
+
+/* Provider Portal headings */
+.provider-portal-wrapper h1,
+.provider-portal-wrapper h2,
+.provider-portal-wrapper h3 {
+  color: #123564;
+}
+
+/* Provider Portal text */
+.provider-portal-wrapper p {
+  color: #657994;
+  line-height: 1.6;
+}
+
+/* Cards inside Provider Portal */
+.provider-portal-wrapper > div > div {
+  border-radius: 18px;
+}
+
+/* Buttons */
+.provider-portal-wrapper button {
+  border-radius: 10px;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.provider-portal-wrapper button:hover {
+  transform: translateY(-2px);
+}
+
+/* Inputs */
+.provider-portal-wrapper input {
+  border: 1px solid #dce8f7;
+  border-radius: 10px;
+  padding: 11px 14px;
+  background: white;
+}
+
+.provider-portal-wrapper input:focus {
+  outline: 3px solid rgba(37, 99, 235, 0.15);
+  border-color: #2563eb;
+}
+/* =========================
+   Shared MediKey Buttons
+   ========================= */
+
+.provider-portal-wrapper button {
+  border: none;
+  padding: 11px 20px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #2563eb, #1474e8);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.25);
+  transition: 0.2s;
+  margin: 6px;
+}
+
+.provider-portal-wrapper button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 22px rgba(37, 99, 235, 0.35);
+}
+
+.provider-portal-wrapper button:active {
+  transform: translateY(0);
+}
+/* =========================
+   Provider Portal Layout
+   Match Document Vault
+   ========================= */
+
+.provider-portal-section {
+  margin-top: 25px;
+  background: white;
+  border: 1px solid #dce8f7;
+  border-radius: 22px;
+  padding: 28px;
+  box-shadow: 0 8px 30px rgba(31, 67, 115, 0.06);
+}
+
+.provider-portal-wrapper {
+  margin-top: 25px;
+  padding: 0;
+}
+
+/* Give Provider Portal sections the same breathing room */
+.provider-portal-wrapper > * {
+  margin-bottom: 22px;
+}
+
+/* Space between buttons */
+.provider-portal-wrapper button {
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+.provider-portal-wrapper {
+  margin-top: 25px;
+  padding: 10px 15px;
+}
+/* =========================
+   Provider Upload Controls
+   Matches MediKey Design
+   ========================= */
+
+.provider-file-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  margin-bottom: 14px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #2563eb, #1474e8);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.25);
+  transition: 0.2s;
+  margin-right: 10px;
+}
+
+.provider-file-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 22px rgba(37, 99, 235, 0.35);
+}
+
+.provider-file-button input {
+  display: none;
+}
+
+.provider-select {
+  width: 100%;
+  max-width: 280px;
+  padding: 12px 14px;
+  margin-bottom: 16px;
+  border: 1px solid #dce8f7;
+  border-radius: 10px;
+  background: white;
+  color: #19365e;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.provider-select:focus {
+  outline: 3px solid rgba(37, 99, 235, 0.15);
+  border-color: #2563eb;
+}
+
+.provider-upload-button {
+  width: 100%;
+  max-width: 280px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #2563eb, #1474e8);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.25);
+  transition: 0.2s;
+}
+
+.provider-upload-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 22px rgba(37, 99, 235, 0.35);
+}
+
+.provider-upload-button:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+  box-shadow: none;
+}

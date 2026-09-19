@@ -1,9 +1,11 @@
+
+import "./App.css";
 import { useState } from "react";
 import { saveKeyPair, unlockPrivateKey } from "./cryptoStorage";
+import ProviderPortal from "./components/ProviderPortal";
 import { readPdf, readTextFile } from "./utils/pdfReader";
 import { detectPII, redactPII } from "./utils/piiDetector";
 import { encryptText } from "./utils/encryption";
-import "./App.css";
 
 function App() {
 
@@ -178,10 +180,20 @@ function App() {
         </div>
 
         <nav className="nav">
+          
           <button className="nav-button active">
             🏠 &nbsp; Dashboard
           </button>
-
+<button
+  className="nav-button"
+  onClick={() => {
+    document.getElementById("provider-portal")?.scrollIntoView({
+      behavior: "smooth",
+    });
+  }}
+>
+  🩺 &nbsp; Provider Portal
+</button>
          <button
   className="nav-button"
   onClick={() => {
@@ -500,6 +512,21 @@ function App() {
             
 
           </section>
+          <section className="provider-portal-section" id="provider-portal">
+  <div className="vault-header">
+    <div className="vault-title">
+      <div className="vault-icon">🩺</div>
+
+      <div>
+        <h2>Provider Portal</h2>
+        <p>Secure access for healthcare providers</p>
+      </div>
+    </div>
+  </div>
+<div className="provider-portal-wrapper">
+  <ProviderPortal />
+</div>
+</section>
 
         </div>
 

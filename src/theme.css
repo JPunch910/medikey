@@ -1,0 +1,21 @@
+:root {
+  --mk-primary: #2563eb;
+  --mk-primary-dark: #102f5f;
+
+  --mk-background: #f4f8ff;
+  --mk-surface: #ffffff;
+
+  --mk-text: #14213d;
+  --mk-muted: #71839d;
+
+  --mk-border: #dce8f7;
+
+  --mk-success: #10a979;
+
+  --mk-radius-sm: 10px;
+  --mk-radius-md: 16px;
+  --mk-radius-lg: 22px;
+
+  --mk-shadow:
+    0 8px 30px rgba(31, 67, 115, 0.06);
+}
