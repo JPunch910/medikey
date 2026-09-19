@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 // ==========================================
 // 1. THE DOCTOR'S VIEW (PROVIDER PORTAL)
@@ -69,23 +69,47 @@ function ProviderPortal() {
 }
 
 // ==========================================
-// 2. THE PATIENT'S VIEW (DASHBOARD + UPLOAD + COPILOT)
+// 2. THE PATIENT'S VIEW (DASHBOARD)
 // ==========================================
 function AccessDashboard() {
-  const [vaultRecords, setVaultRecords] = useState([
-    { id: 'rec_001', name: 'Blood Test Results - Jan 2026', type: 'Lab Report' },
-    { id: 'rec_002', name: 'MRI Scan - Lumbar Spine', type: 'Imaging' }
-  ]);
+  // Start with an empty vault
+  const [vaultRecords, setVaultRecords] = useState([]);
+  const [isLoadingVault, setIsLoadingVault] = useState(true);
+  const [fetchError, setFetchError] = useState(null);
   const [activeShares, setActiveShares] = useState([]);
   
   // Upload State
   const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedType, setSelectedType] = useState('Lab Report');
   const [isUploading, setIsUploading] = useState(false);
 
   // Copilot State
   const [aiActiveRecord, setAiActiveRecord] = useState(null);
   const [isAiThinking, setIsAiThinking] = useState(false);
   const [aiResponse, setAiResponse] = useState('');
+
+  // --- DATABASE CONNECTION SIMULATION ---
+  useEffect(() => {
+    // Temporarily bypass the error so you can test the UI locally
+    setIsLoadingVault(false);
+    setFetchError(null);
+    
+    /* Uncomment this when Peer 2's database is ready:
+    const fetchVaultData = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/api/files');
+        if (!response.ok) throw new Error(`Server error`);
+        const data = await response.json();
+        setVaultRecords(data); 
+      } catch (error) {
+        setFetchError("Could not load your medical vault.");
+      } finally {
+        setIsLoadingVault(false);
+      }
+    };
+    fetchVaultData();
+    */
+  }, []);
 
   const handleShare = (record) => {
     const secretKey = crypto.randomUUID().replace(/-/g, '');
@@ -103,36 +127,24 @@ function AccessDashboard() {
     setActiveShares(activeShares.filter(share => share.shareId !== shareIdToRevoke));
   };
 
-  // ==========================================
-  // TEAM INTEGRATION ZONE: THE UPLOAD FUNCTION
-  // ==========================================
   const handleUpload = async () => {
     if (!selectedFile) return;
     setIsUploading(true);
 
     try {
-      // STEP 1: PEER 1'S ENCRYPTION
-      // When Peer 1 is ready, they will encrypt 'selectedFile' here.
-      
-      // STEP 2: PEER 2'S DATABASE
-      // When Peer 2 is ready, they will send the encrypted file to the DB here.
-      
-      // For now, we simulate the time it takes to encrypt and upload:
+      // Simulate encryption and upload delay
       await new Promise(resolve => setTimeout(resolve, 1500)); 
 
       const newRecord = {
         id: 'rec_' + Math.floor(Math.random() * 10000), 
         name: selectedFile.name,
-        type: 'Uploaded Document' 
+        type: selectedType // Using the dropdown value!
       };
       
-      // Add the file to the Vault UI
       setVaultRecords([newRecord, ...vaultRecords]);
       setSelectedFile(null);
-
     } catch (error) {
-      console.error("Upload failed:", error);
-      alert("Failed to connect to the Document Vault.");
+      alert("Upload failed.");
     } finally {
       setIsUploading(false);
     }
@@ -145,10 +157,10 @@ function AccessDashboard() {
 
     setTimeout(() => {
       setIsAiThinking(false);
-      if (record.name.includes("Blood")) {
-        setAiResponse("Your Hemoglobin and White Blood Cell counts are normal. Vitamin D is slightly low. Consider supplements.\n\n*PII was stripped locally before analysis.*");
+      if (record.type === "Lab Report") {
+        setAiResponse("Your lab results are within normal ranges. Vitamin D is slightly low. Consider supplements.\n\n*PII was stripped locally before analysis.*");
       } else {
-        setAiResponse("This shows slight age-related wear in your lower back. It is common and usually not serious.\n\n*PII was stripped locally before analysis.*");
+        setAiResponse("The imaging shows slight age-related wear. It is common and usually not serious.\n\n*PII was stripped locally before analysis.*");
       }
     }, 1500);
   };
@@ -163,39 +175,65 @@ function AccessDashboard() {
           <div className="border rounded-lg p-4 bg-gray-50">
             <h2 className="text-xl font-semibold mb-4">My Medical Vault</h2>
             
-            {/* UPLOAD ZONE */}
+            {/* UPLOAD ZONE WITH DROPDOWN */}
             <div className="mb-6 p-5 border-2 border-dashed border-gray-300 rounded-lg bg-white flex flex-col items-center justify-center">
               <input 
                 type="file" 
                 onChange={(e) => setSelectedFile(e.target.files[0])}
-                className="mb-3 text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" 
+                className="mb-3 text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 w-full max-w-xs" 
               />
+              <select 
+                value={selectedType}
+                onChange={(e) => setSelectedType(e.target.value)}
+                className="mb-4 border border-gray-300 p-2 rounded text-sm w-full max-w-xs bg-gray-50"
+              >
+                <option value="Lab Report">Lab Report</option>
+                <option value="Imaging">Imaging (MRI/X-Ray)</option>
+                <option value="Prescription">Prescription</option>
+                <option value="Doctor Note">Doctor Note</option>
+              </select>
               <button 
                 onClick={handleUpload} 
                 disabled={!selectedFile || isUploading} 
-                className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 disabled:bg-gray-400 font-medium transition-colors w-full sm:w-auto"
+                className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 disabled:bg-gray-400 font-medium transition-colors w-full max-w-xs"
               >
-                {isUploading ? '🔒 Encrypting & Uploading...' : 'Upload to Vault'}
+                {isUploading ? '🔒 Encrypting...' : 'Upload to Vault'}
               </button>
-              <p className="text-xs text-gray-400 mt-2">Files are encrypted locally before leaving your device.</p>
+              <p className="text-xs text-gray-400 mt-2 text-center">Files are encrypted locally before leaving your device.</p>
             </div>
 
-            {vaultRecords.map(record => (
-              <div key={record.id} className="flex justify-between items-center p-3 mb-2 bg-white rounded shadow-sm border">
-                <div>
-                  <div className="font-medium">{record.name}</div>
-                  <div className="text-xs text-gray-500">{record.type}</div>
-                </div>
-                <div className="flex gap-2">
-                  <button onClick={() => handleAskCopilot(record)} className="bg-purple-100 text-purple-700 border border-purple-300 px-3 py-2 rounded hover:bg-purple-200 text-sm font-medium">
-                    ✨ Ask Copilot
-                  </button>
-                  <button onClick={() => handleShare(record)} className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-sm">
-                    Share
-                  </button>
-                </div>
+            {/* VAULT RECORDS DISPLAY */}
+            {isLoadingVault ? (
+              <div className="p-8 flex flex-col items-center justify-center text-gray-500 font-medium bg-white rounded border border-dashed">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mb-4"></div>
+                Connecting to secure database...
               </div>
-            ))}
+            ) : fetchError ? (
+              <div className="p-4 bg-red-50 text-red-600 border border-red-200 rounded">
+                {fetchError}
+              </div>
+            ) : vaultRecords.length === 0 ? (
+              <div className="p-8 text-center text-gray-500 italic bg-white rounded border border-dashed">
+                Your vault is empty. Upload a file to get started.
+              </div>
+            ) : (
+              vaultRecords.map(record => (
+                <div key={record.id} className="flex justify-between items-center p-3 mb-2 bg-white rounded shadow-sm border">
+                  <div>
+                    <div className="font-medium">{record.name}</div>
+                    <div className="text-xs text-gray-500">{record.type}</div>
+                  </div>
+                  <div className="flex gap-2">
+                    <button onClick={() => handleAskCopilot(record)} className="bg-purple-100 text-purple-700 border border-purple-300 px-3 py-2 rounded hover:bg-purple-200 text-sm font-medium">
+                      ✨ Ask Copilot
+                    </button>
+                    <button onClick={() => handleShare(record)} className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-sm">
+                      Share
+                    </button>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
 
           <div className="border rounded-lg p-4 bg-gray-50">
@@ -205,11 +243,11 @@ function AccessDashboard() {
             ) : (
               activeShares.map(share => (
                 <div key={share.shareId} className="flex justify-between items-center p-3 mb-3 bg-white rounded shadow-sm border">
-                  <div>
-                    <div className="font-medium text-blue-800">{share.recordName}</div>
-                    <code className="text-xs bg-gray-100 p-1 rounded break-all mt-1 block border">{share.url}</code>
+                  <div className="overflow-hidden pr-2">
+                    <div className="font-medium text-blue-800 truncate">{share.recordName}</div>
+                    <code className="text-xs bg-gray-100 p-1 rounded mt-1 block border truncate" title={share.url}>{share.url}</code>
                   </div>
-                  <button onClick={() => handleRevoke(share.shareId)} className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 text-sm h-fit ml-4">
+                  <button onClick={() => handleRevoke(share.shareId)} className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 text-sm h-fit shrink-0">
                     Revoke
                   </button>
                 </div>
@@ -230,7 +268,7 @@ function AccessDashboard() {
           {isAiThinking && (
             <div className="flex flex-col items-center py-10">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-700 mb-4"></div>
-              <p className="text-purple-700 text-sm font-medium animate-pulse">Sanitizing PII & analyzing {aiActiveRecord?.name}...</p>
+              <p className="text-purple-700 text-sm font-medium animate-pulse text-center">Sanitizing PII & analyzing {aiActiveRecord?.name}...</p>
             </div>
           )}
           {aiResponse && (
